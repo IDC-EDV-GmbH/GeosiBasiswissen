@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Version** | 1 |
+| **Version** | 2 |
 | **Stand** | 25.09.2026 |
 | **Maßgebliche Fassung** | `Geosi-Basis.md` im GitHub-Repository **GeosiBasiswissen** |
 | **Erstellt von** | Claude, aus dem Projekt „GeosiFORM6“, zur Prüfung durch Martin Ruetz |
@@ -28,6 +28,8 @@ Dieses Dokument hält dieses Querschnittswissen **an genau einer Stelle** fest.
 - Ablageort: `Geosi-Basis.md` im GitHub-Repository **[GeosiBasiswissen](https://github.com/IDC-EDV-GmbH/GeosiBasiswissen.git)** (eigenes Repository, angelegt von Martin Ruetz; Zweck siehe `README.md` dort). Lokaler Klon empfohlen unter `<GEOSI_ROOT>\GeosiBasiswissen`.
 - **Änderungen nur im Repository**, versioniert per Commit, bei Bedarf per Pull Request mit Review. Dabei jedes Mal **Version und Stand** oben erhöhen und einen Eintrag in Abschnitt 10 ergänzen.
 - **In jedes Claude-Projekt kommt eine unveränderte Kopie.** Die Kopien werden dort **nie bearbeitet**, nur durch die neue Fassung ersetzt.
+- **So wird eine Projektkopie ersetzt:** zuerst die alte `Geosi-Basis.md` im Claude-Projekt **löschen**, dann die neue aus dem Repository-Klon einfügen. Nur Einfügen überschreibt nicht, sondern legt eine zweite Datei gleichen Namens daneben an – dann stehen zwei widersprüchliche Fassungen im Projekt. Danach prüfen, dass die Datei nur einmal vorhanden ist und die Version oben stimmt.
+- Die Datei immer **aus dem Repository-Klon** (bzw. von GitHub) importieren, nicht aus einer Zwischenablage oder einem Download aus einer Claude-Sitzung.
 - Claude-Sitzungen:
   - Findet eine Sitzung Wissen, das hierher gehört, schlägt sie die Änderung für das Repository vor, statt nur die Projektkopie anzupassen.
   - Stimmt die Version in einer Projektkopie nicht mit der im Repository überein, gilt die Fassung im Repository.
@@ -250,6 +252,7 @@ Weitere Regeln:
 
 - **Claude kann nicht kompilieren oder ausführen**: kein Windows, kein BricsCAD, kein Visual Studio. Der Entwickler baut und testet und meldet Compiler-Fehler und Testergebnisse zurück. Reine C#-Logik kann Claude teilweise vorab mit Mono gegen Stubs kompilieren und testen.
 - **Übertragene Dateien werden immer byte-genau auf der Platte verifiziert.** Visual Studio hat mehrfach eine gerade geschriebene Datei sofort wieder mit dem alten Stand überschrieben. Deshalb: geänderte Dateien vor dem Bauen in VS schließen bzw. neu laden, **ohne zu speichern**.
+- **Maßgeblich ist nur, was nach der Übertragung auf der Platte geprüft wurde.** Die Fassung einer Datei in der Leiste „Ausgaben“ der Claude-App bzw. ein Download daraus kann veraltet sein. Auch die Übertragung selbst hat schon eine ältere Fassung gleichen Namens geliefert, obwohl die Datei in der Sitzung aktuell war. Claude überträgt eine geänderte Datei deshalb im Zweifel unter neuem Namen und prüft das Ergebnis danach auf der Platte. Anwender verwenden die Datei am Zielort (z. B. im Repository-Klon), nicht einen Download aus „Ausgaben“.
 - **Umlaute in C++-String-Literalen** als Escape schreiben: `\u00E4` usw. für ä, ö, ü, Ä, Ö, Ü, ß. Sonst zeigt MSVC nach einer Komplett-Übertragung der Datei alle Umlaute der Datei falsch an (z. B. „ZusÃ¤tzlich“). Kommentare sind nicht betroffen.
 - **Transport über `DataXmlCollection`:**
   - Nur einfache Elemente mit Textinhalt, **keine Attribute, keine Self-Closing-Tags**.
@@ -285,3 +288,4 @@ Weitere Regeln:
 | Version | Datum | Änderung | Von |
 |---|---|---|---|
 | 1 | 25.09.2026 | Erstfassung aus dem Projekt GeosiFORM6 | Claude, zur Prüfung durch Martin |
+| 2 | 25.09.2026 | 1.2: Vorgehen beim Ersetzen der Projektkopie (erst löschen, dann einfügen; aus dem Klon importieren). 7: Nur der auf der Platte geprüfte Stand ist maßgeblich, nicht „Ausgaben“ bzw. Download. | Claude, auf Hinweis von Martin |
