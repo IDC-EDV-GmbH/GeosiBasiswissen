@@ -25,7 +25,7 @@ Dieses Dokument hält dieses Querschnittswissen **an genau einer Stelle** fest.
 ### 1.2 Ablage und Pflege
 
 - **Maßgeblich ist die Fassung im Git-Repository.** Nicht die Kopie in einem Claude-Projekt und nicht eine Datei auf einem einzelnen Rechner.
-- Ablageort: `Geosi-Basis.md` im GitHub-Repository **GeosiBasiswissen** (eigenes Repository, angelegt von Martin Rütz; Zweck siehe `README.md` dort). Lokaler Klon empfohlen unter `<GEOSI_ROOT>\GeosiBasiswissen`.
+- Ablageort: `Geosi-Basis.md` im GitHub-Repository **[GeosiBasiswissen](https://github.com/IDC-EDV-GmbH/GeosiBasiswissen.git)** (eigenes Repository, angelegt von Martin Rütz; Zweck siehe `README.md` dort). Lokaler Klon empfohlen unter `<GEOSI_ROOT>\GeosiBasiswissen`.
 - **Änderungen nur im Repository**, versioniert per Commit, bei Bedarf per Pull Request mit Review. Dabei jedes Mal **Version und Stand** oben erhöhen und einen Eintrag in Abschnitt 10 ergänzen.
 - **In jedes Claude-Projekt kommt eine unveränderte Kopie.** Die Kopien werden dort **nie bearbeitet**, nur durch die neue Fassung ersetzt.
 - Claude-Sitzungen:
