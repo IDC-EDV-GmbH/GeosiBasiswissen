@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Version** | 4 |
+| **Version** | 6 |
 | **Stand** | 28.09.2026 |
 | **Maßgebliche Fassung** | `Geosi-Basis.md` im GitHub-Repository **GeosiBasiswissen** |
 | **Erstellt von** | Claude, aus dem Projekt „GeosiFORM6“, zur Prüfung durch Martin Ruetz |
@@ -48,7 +48,7 @@ Dieses Dokument hält dieses Querschnittswissen **an genau einer Stelle** fest.
 | **GeosiFORM6** | GeosiFORM 6 gesamt (Urkunden, Teilung, Gegenüberstellung, Anonymisierung auf Form-Seite, Form5-Import usw.) | `GeosiFORMv6`, `IdcShared_Cpp_GeosiForm` |
 | **Geosi Plan STP** | STP-Export in GeosiPLAN | GeosiPLAN (STP-Teil) |
 | **Geosi Plan Flächenverwaltung** | Flächenmanager in GeosiPLAN, inkl. Anonymisierung auf Plan-Seite | GeosiPLAN (Flächenverwaltung) |
-| **GeosiFORM5** | GeosiFORM 5 (Vorgänger von Form6, VB.NET, bei Kunden noch im Einsatz), zunächst Anonymisierung von Form5-Urkunden (`.eig`) | GeosiFORM5-Quellcode (Pfad noch nicht erhoben, siehe 3.1) |
+| **GeosiFORM5** | GeosiFORM 5 (Vorgänger von Form6, VB.NET, bei Kunden noch im Einsatz), zunächst Anonymisierung von Form5-Urkunden (`.eig`) | `GeosiFORMv5\Dev` (siehe 3.1) |
 
 **Regeln:**
 
@@ -66,6 +66,7 @@ Bisherige Übergaben:
 | 25.09.2026 | Geosi Plan Flächenverwaltung → GeosiFORM6 | `Uebergabe_Flaechenabgleich_Absturz_fuer_GeosiFORM6.md` (Absturz im Flächenabgleich; behoben 25.09.2026) |
 | 25.09.2026 | Geosi Plan Flächenverwaltung → GeosiFORM6 | `Uebergabe_Anonymisierung_ungueltige_KG_fuer_GeosiFORM6.md` (fiktive KGs für ungültige KG-Werte; behoben, getestet 28.09.2026) |
 | 28.09.2026 | GeosiFORM6 → GeosiFORM5 | `GeosiFORM5_Anonymisierung_Projektwissen.md` (Regeln, Form5-Datenformat aus dem Form6-Import, Zuordnungsdatei, Fallstricke) |
+| 28.09.2026 | GeosiFORM5 → GeosiFORM6 | `Uebergabe_KgXcfg_Pfad_fuer_GeosiFORM6.md` (`Kg.xcfg`-Pfad wie GeosiPLAN ermitteln, in Form5 umgesetzt und getestet, Vorlage für `CmdAnonymSaveAs.cpp`, offener Punkt 3; in Form6 umgesetzt und getestet 28.09.2026) |
 
 ---
 
@@ -80,6 +81,7 @@ Ab dem Stammordner der Klone ist die Struktur bei allen gleich. In den Dokumente
 | Platzhalter | Bedeutung | Bei Martin |
 |---|---|---|
 | `<GEOSI_ROOT>` | Ordner, in dem die Geosi-Repositories nebeneinander liegen | `C:\Arbeit_Entw\Geosi` |
+| `<GEOSI_FORM5_ROOT>` | Ordner des GeosiFORM5-Repositorys (getrennt von `<GEOSI_ROOT>`) | `C:\Arbeit_Entw\GeosiForm5` |
 
 | Pfad (relativ) | Inhalt |
 |---|---|
@@ -90,7 +92,7 @@ Ab dem Stammordner der Klone ist die Struktur bei allen gleich. In den Dokumente
 | `<GEOSI_ROOT>\IdcShared_Cpp\Dev\IdcShared_Cpp_GeosiForm\` | gemeinsamer C++-Code von App und Arx |
 | `<GEOSI_ROOT>\IdcShared_Cs\` | gemeinsamer C#-Code |
 | `<GEOSI_ROOT>\GeosiBasiswissen\` | dieses Basisdokument (empfohlener Ablageort des Klons) |
-| GeosiFORM5-Quellcode (VB.NET) | **noch nicht erhoben**, bitte im Projekt GeosiFORM5 ergänzen |
+| `<GEOSI_FORM5_ROOT>\GeosiFORMv5\Dev\` | GeosiFORM5-Lösung (`GeosiForm.sln`, `GeosiForm.vbproj`), VB.NET. Eigenes Git-Repository (Branch `Dev`). Liegt **nicht** unter `<GEOSI_ROOT>`. Keine Build-Abhängigkeit zu den anderen Repositories. |
 | `<GEOSI_ROOT>\GeosiPLAN\Dev\GeosiPlan\` | GeosiPLAN-Lösung (`GeosiPlan.sln`, `GeosiPlan.vcxproj`), C++/MFC, ObjectARX/BRX. Quelldateien in **Windows-1252** (siehe 7) |
 
 **Fest vorgegeben (Build-Voraussetzung):** `IdcShared_Cpp` muss als **Geschwisterordner** neben `GeosiFORMv6` liegen, nicht darunter. Das Makro `$(IdcSharedRoot)` in `GeosiFormApp.vcxproj` (`..\..\IdcShared_Cpp\Dev`) und die relativen Pfade in `GeosiFormArx.vcxproj` setzen das voraus. Der Stammordner darf abweichen, die Lage zueinander nicht. Dasselbe gilt für GeosiPLAN: `GeosiPlan.vcxproj` bindet gemeinsamen Code über `..\..\..\IdcShared_Cpp\Dev\...` ein, `IdcShared_Cpp` liegt also auch neben `GeosiPLAN`.
@@ -111,13 +113,13 @@ Stehen in Dokumenten nur als Beispiel („bei Martin: …“), nie als Vorgabe.
 | `<GEOSI_ROOT>\GeosiFORMv6\Claude outputs\` | Ablage für Übergabedateien und Ergebnisse aus Claude-Sitzungen |
 | `C:\Temp\` | Debug-Dumps |
 
-### 3.4 Im Code fest hinterlegte Pfade (Stand 25.09.2026)
+### 3.4 Im Code fest hinterlegte Pfade (Stand 28.09.2026)
 
 Diese Pfade stehen nicht nur in Dokumenten, sondern im Quellcode. Bei Kollegen können sie ins Leere zeigen.
 
 | Datei | Fester Pfad | Gruppe | Bewertung |
 |---|---|---|---|
-| `IdcShared_Cpp_GeosiForm\CmdAnonymSaveAs.cpp` | `C:\ProgramData\Geosi60\GeosiPLANv3\Cfg\Kg.xcfg` | 2 | **Relevant.** Fehlt die Datei, wird der KG-Nachtrag still übersprungen – bei abweichender Installation fällt das nicht auf. **Quelle in GeosiPLAN ermittelt (28.09.2026):** `CParamLocal::GetParamLoc()->GetPathCfgConfig() + KG_MGR_FILE` (`"Kg.xcfg"`, Land AT; sonst `Kg_<land>.xcfg`), siehe `CKgMgrMap::GetFilename` in `GeosiPLAN\Dev\GeosiPlan\KgMgr.cpp`. Das Plan-Werkzeug `Cmd_Area_Mgr_Anonymize` nutzt diesen Weg. Umstellung in Form6 offen. |
+| `IdcShared_Cpp_GeosiForm\CmdAnonymSaveAs.cpp` | ~~`C:\ProgramData\Geosi60\GeosiPLANv3\Cfg\Kg.xcfg`~~ | 2 | **Erledigt (28.09.2026, von Martin getestet).** Der Pfad wird jetzt wie in GeosiPLAN ermittelt (`ErmittleKgXcfgPfad()`, nach der Vorlage aus GeosiFORM5): `PlanPath.xglob` → `PathCfg`, sonst Ordner mit `Plan.xglob` (je `%LOCALAPPDATA%`, dann `%ProgramData%` `\Geosi60\GeosiPLANv3\`) → `<PathCfg>\Cfg\Kg.xcfg`. Danach: gemerkte Auswahl des Anwenders (`HKCU\Software\IDC EDV\GeosiFORM6\Anonymisierung`, Wert `KgXcfgPfad`), der bisherige Standardpfad (nur noch als Ersatzversuch), der neueste Ordner `%ProgramData%\Geosi60\GeosiPLAN*\Cfg\`. Wird nichts gefunden, fragt Form6 nach (selbst suchen / ohne `Kg.xcfg` fortfahren / abbrechen), statt still zu überspringen. Quelle in GeosiPLAN: `CKgMgrMap::GetFilename` in `GeosiPLAN\Dev\GeosiPlan\KgMgr.cpp`, `CParamLocal::Init`. Nicht nachgebaut: Programmverzeichnis von GeosiPLAN, GeosiADMIN-Einstellungen, `Kg_<land>.xcfg`. |
 | `GeosiFormKernel\FormFlAbgleich.cs` (Region `TEST-ONLY`) | `C:\Arbeit_Entw\Geosi\GeosiFORMv6\CmdAreaSyncTestHarness\synthetic_testdata` | 3 | unkritisch: nur Startordner eines Test-Dialogs, Testcode zum Entfernen |
 | `GeosiFormKernel\CmdAreaSync.cs` (TEMP-DEBUG) | `C:\Temp\CmdAreaSync_*.xml` | 3 | unkritisch, soll ohnehin entfernt werden |
 
@@ -196,7 +198,14 @@ Verknüpfung Plan-Fläche ⟷ Urkunde: Die Plan-Guid (`Guid_S`) steht in der `.f
 - Relativ isoliert von den anderen Geosi-Programmen. Einzige bekannte Schnittstelle: eine **Flächenübertragung zu GeosiPLAN** (Details noch nicht dokumentiert).
 - **Urkundenformat `.eig`:** Access-Datenbank (MDB). GeosiFORM 6 kann `.eig` importieren („Import FORM...“): externer Konverter `IdcMdbToXmlConverter.exe` → XML → `EigFile` (`GeosiFormKernel\ImportV5.cs`, dort alle Tabellen und Felder) → Umwandlung in die Form6-Urkunde (`ImportV5EigToUrkunde.cs`).
 - Eine aus `.eig` importierte Urkunde hat **keine Plan-Verknüpfung** (`GuidPlanFlaeche` leer), weil Form5 keine Plan-Guids kennt.
-- Architektur von Form5 (Aufbau, Befehle, Speicherung) ist **noch nicht dokumentiert**. Bitte im Projekt GeosiFORM5 erheben und hier ergänzen.
+- **Architektur (erhoben 28.09.2026, Projekt GeosiFORM5):**
+  - VB.NET, **.NET Framework 3.5**, WinForms-MDI-Anwendung (`frmMain`), `x86`, RootNamespace `GeosiFORM`. Ein Prozess, keine Aufteilung Kernel/nativ wie in Form6.
+  - Datenzugriff über `System.Data.OleDb` (Jet 4.0 oder ACE 12) mit eigenen Klassen `mrt.db.cls_DB` / `cls_DBRs` / `cls_DBAdp`.
+  - **Kein „Speichern“:** Änderungen gehen sofort in die `.eig`. Option „Projekte lokal öffnen“ arbeitet auf einer lokalen Kopie.
+  - Feldnamen in der MDB **ohne** Endungen `_S`/`_L` (die gibt es nur in der Form6-XML). Viele Tabellen haben keinen Primärschlüssel.
+  - GFN als Text: Nummer + KG (5-stellig) + `/Jahr/VA`, z. B. `50087124/1996/81` = GFN 500, KG 87124.
+  - Erweiterungen ohne Eingriff in Bestandscode: eigene Partial-Class-Datei von `frmMain` mit eigenem `Load`-Handler, Logik in eigenen Klassen, nur `Compile`-Einträge in der `.vbproj` (so beim Anonymisierungswerkzeug).
+- Details (Feldkatalog, Anonymisierungsregeln je Feld) im Projekt GeosiFORM5, Dokument `GeosiFORM5_Anonymisierung_Umsetzung.md`.
 
 ---
 
@@ -239,7 +248,7 @@ Verknüpfung Plan-Fläche ⟷ Urkunde: Die Plan-Guid (`Guid_S`) steht in der `.f
 Ziel: echte Projekte als Testdaten nutzen, ohne echte Personen- oder Grundstücksdaten.
 
 - **Form6:** „Anonymisiert speichern unter...“ (`CmdAnonymSaveAs`). Eingebaut und getestet am 25.09.2026, Details im Projekt GeosiFORM6.
-- **GeosiFORM5:** Anonymisierung von `.eig`-Urkunden nach denselben Regeln und mit derselben Zuordnungsdatei. **In Arbeit** (Projekt GeosiFORM5, Stand 28.09.2026).
+- **GeosiFORM5:** „Datei > Anonymisiert speichern unter...“ für `.eig`-Urkunden nach denselben Regeln und mit derselben Zuordnungsdatei. Eingebaut und getestet am 28.09.2026, auch die Kette anonymisierte `.eig` → Plan-Dwg → `Cmd_Area_Mgr_Anonymize` mit der Form5-`_Zuordnung.xml`. Zusätzlich: Komprimieren der MDB (keine alten Werte im freien Speicher) und Nachkontrolle auf verbliebene Originalnamen. Details im Projekt GeosiFORM5.
 - **GeosiPLAN:** gleichlautende Anonymisierung des Flächenmanagers und der Projekt-KG, Werkzeug `Cmd_Area_Mgr_Anonymize` (Aufruf `IDCP_CMD Cmd_Area_Mgr_Anonymize;`, Eingabe: `_Zuordnung.xml`). Eingebaut und getestet am 28.09.2026, Details im Projekt Geosi Plan Flächenverwaltung. Die Form-Anbindung an die anonymisierte `.fdoc` stellt der Anwender danach manuell um.
 
 **Gemeinsame Regeln, damit beide Seiten zusammenpassen:**
@@ -282,7 +291,7 @@ Weitere Regeln:
 - **Übertragene Dateien werden immer byte-genau auf der Platte verifiziert.** Visual Studio hat mehrfach eine gerade geschriebene Datei sofort wieder mit dem alten Stand überschrieben. Deshalb: geänderte Dateien vor dem Bauen in VS schließen bzw. neu laden, **ohne zu speichern**.
 - **Maßgeblich ist nur, was nach der Übertragung auf der Platte geprüft wurde.** Die Fassung einer Datei in der Leiste „Ausgaben“ der Claude-App bzw. ein Download daraus kann veraltet sein. Auch die Übertragung selbst hat schon eine ältere Fassung gleichen Namens geliefert, obwohl die Datei in der Sitzung aktuell war. Claude überträgt eine geänderte Datei deshalb im Zweifel unter neuem Namen und prüft das Ergebnis danach auf der Platte. Anwender verwenden die Datei am Zielort (z. B. im Repository-Klon), nicht einen Download aus „Ausgaben“.
 - **Datei-Encoding:** GeosiPLAN-Quelldateien (`.cpp`/`.h`) sind **Windows-1252** und dürfen nicht als UTF-8 umgeschrieben werden (Regel im `CLAUDE.md` des Plan-Repositorys). Dateien in `IdcShared_Cpp_GeosiForm` sind UTF-8. Neue Dateien schreibt Claude in reinem ASCII (Umlaute nur als Escape, Kommentare ohne Umlaute), dann passen sie zu beiden.
-- **VB.NET-Quellen (GeosiFORM5):** Encoding der Quelldateien vor der ersten Änderung prüfen und beibehalten, analog zur Regel für GeosiPLAN. Erfahrungen dazu gibt es noch keine.
+- **VB.NET-Quellen (GeosiFORM5):** Encoding der Quelldateien vor der ersten Änderung prüfen und beibehalten, analog zur Regel für GeosiPLAN. Befund 28.09.2026: gemischt, Formen/Module überwiegend Windows-1252, Klassen teils UTF-8 mit BOM. Neue Dateien in reinem ASCII oder als UTF-8 mit BOM; beides hat der VB-Compiler problemlos übernommen. Reine Logik kann Claude vorab mit .NET 8 (VB) gegen Stubs kompilieren und testen.
 - **Umlaute in C++-String-Literalen** als Escape schreiben: `\u00E4` usw. für ä, ö, ü, Ä, Ö, Ü, ß. Sonst zeigt MSVC nach einer Komplett-Übertragung der Datei alle Umlaute der Datei falsch an (z. B. „ZusÃ¤tzlich“). Kommentare sind nicht betroffen.
 - **Transport über `DataXmlCollection`:**
   - Nur einfache Elemente mit Textinhalt, **keine Attribute, keine Self-Closing-Tags**.
@@ -307,10 +316,10 @@ Weitere Regeln:
 
 1. ~~Endgültigen Ablageort festlegen~~ – erledigt: Repository GeosiBasiswissen (1.2).
 2. ~~GeosiPLAN-Quellcode-Pfade ergänzen (3.1)~~ – erledigt 28.09.2026.
-3. `Kg.xcfg`-Pfad im Form6-Code nicht fest hinterlegen, sondern von GeosiPLAN beziehen (3.4). Quelle in GeosiPLAN ermittelt (28.09.2026), Umsetzung im Projekt GeosiFORM6 offen.
+3. ~~`Kg.xcfg`-Pfad im Form6-Code nicht fest hinterlegen, sondern wie GeosiPLAN ermitteln (3.4)~~ – erledigt 28.09.2026 (Form6 `CmdAnonymSaveAs.cpp`, getestet).
 4. Plan-Architektur vollständig dokumentieren (4.2, teilweise erhoben).
 5. Anonymisierung der `.dwg`-Texte und -Blöcke außerhalb des Flächenmanagers (6).
-6. GeosiFORM5: Quellcodepfad (3.1), Architektur und Schnittstelle zu GeosiPLAN (4.4) dokumentieren.
+6. GeosiFORM5: ~~Quellcodepfad (3.1), Architektur (4.4)~~ – erledigt 28.09.2026. Offen: Flächenübertragung zu GeosiPLAN (4.4) dokumentieren.
 
 ---
 
@@ -322,3 +331,5 @@ Weitere Regeln:
 | 2 | 25.09.2026 | 1.2: Vorgehen beim Ersetzen der Projektkopie (erst löschen, dann einfügen; aus dem Klon importieren). 7: Nur der auf der Platte geprüfte Stand ist maßgeblich, nicht „Ausgaben“ bzw. Download. | Claude, auf Hinweis von Martin |
 | 3 | 28.09.2026 | 2: zwei Übergaben Geosi Plan Flächenverwaltung → GeosiFORM6. 3.1: GeosiPLAN-Quellcodepfad. 3.4/9: Quelle des `Kg.xcfg`-Pfads in GeosiPLAN. 4.2: erste Angaben zur Plan-Architektur. 6: Plan-Werkzeug `Cmd_Area_Mgr_Anonymize` eingebaut und getestet, Regel für ungültige KG-Werte, Projekt-KG, `.xstp`. 7: Datei-Encoding GeosiPLAN. | Claude, aus dem Projekt „Geosi Plan Flächenverwaltung“, zur Prüfung durch Martin |
 | 4 | 28.09.2026 | 2: Projekt GeosiFORM5 und Übergabe GeosiFORM6 → GeosiFORM5. 3.1: Platzhalter Form5-Quellcode. 4: Hinweis, dass 4.1 nur für Form6 gilt; neuer Abschnitt 4.4 GeosiFORM 5. 6: Form5-Anonymisierung in Arbeit, Zuordnungsdatei auch für `.eig`. 7: Encoding VB.NET. 9: offener Punkt 6. | Claude, aus dem Projekt „GeosiFORM6“, zur Prüfung durch Martin |
+| 5 | 28.09.2026 | 2: Übergabe GeosiFORM5 → GeosiFORM6 (`Kg.xcfg`-Pfad), Code-Spalte Form5. 3.1: Platzhalter `<GEOSI_FORM5_ROOT>` und Form5-Quellcodepfad. 3.4: Kg.xcfg-Suche in Form5 nachgebaut. 4.4: Form5-Architektur. 6: Form5-Anonymisierung eingebaut und getestet. 7: Befund Encoding VB.NET. 9: offener Punkt 6 teilweise erledigt. | Claude, aus dem Projekt „GeosiFORM5“, zur Prüfung durch Martin |
+| 6 | 28.09.2026 | 3.4: `Kg.xcfg`-Pfad in Form6 wie GeosiPLAN ermittelt, fester Pfad nur noch Ersatzversuch, Rückfrage statt stillem Überspringen (getestet). 2: Übergabe GeosiFORM5 → GeosiFORM6 als umgesetzt markiert. 9: offener Punkt 3 erledigt. | Claude, aus dem Projekt „GeosiFORM6“, zur Prüfung durch Martin |
